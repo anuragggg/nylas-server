@@ -1,29 +1,17 @@
 export default (req, res) => {
-    // Handle GET request for webhook verification
     if (req.method === "GET" && req.query.challenge) {
-        console.log(`Received challenge code: ${req.query.challenge}`);
-        console.log(`Now returning challenge code: ${req.query.challenge}`);
-
-        // Respond with challenge to verify the webhook
-        res.send(req.query.challenge);
-    }
-    // Handle POST request for webhook events
-    else if (req.method === "POST") {
-        console.log("====== Message Updated Start ======");
+        console.log(`Received challenge: ${req.query.challenge}`);
+        return res.send(req.query.challenge);
+    } 
+    
+    if (req.method === "POST") {
+        console.log("====== Webhook Event Received ======");
+        console.log("Full Request Body:", JSON.stringify(req.body, null, 2)); // Log the full JSON body
+        console.log("====== End of Webhook Event ======\n");
         
-        // Logging received webhook data
-        if (req.body?.deltas) {
-            req.body.deltas.forEach(delta => console.log(JSON.stringify(delta, null, 2)));
-        }
-
-        console.log(req.body);
-        console.log("====== Message Updated End ======\n");
-
-        // Responding to Nylas to prevent retries
-        res.status(200).end();
-    }
-    // Handle other request methods
-    else {
-        res.status(405).json({ error: "Method Not Allowed" });
-    }
+        // Responding to avoid retries
+        return res.status(200).json({ message: "Webhook received successfully" });
+    } 
+    
+    res.status(405).json({ error: "Method Not Allowed" });
 };
