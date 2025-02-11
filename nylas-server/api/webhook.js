@@ -16,6 +16,7 @@ export default (req, res) => {
             req.body.deltas.forEach(delta => console.log(JSON.stringify(delta, null, 2)));
         }
 
+        console.log(req.body);
         console.log("====== Message Updated End ======\n");
 
         // Responding to Nylas to prevent retries
